@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('env', () => {
@@ -40,7 +42,7 @@ describe('env', () => {
     delete process.env.NODE_ENV;
 
     await expect(import('../src/env.js')).rejects.toThrow(
-      'Environment variable NODE_ENV is missing or empty'
+      'Environment variable NODE_ENV is missing or empty',
     );
   });
 
@@ -56,7 +58,7 @@ describe('env', () => {
     process.env.USER_AGENT = 'CORS-Proxy/1.0';
 
     await expect(import('../src/env.js')).rejects.toThrow(
-      'Environment variable PORT must be a valid number, got "invalid"'
+      'Environment variable PORT must be a valid number, got "invalid"',
     );
   });
 });

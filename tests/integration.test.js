@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
 import { Buffer } from 'node:buffer';
+
+import { describe, it, expect } from 'vitest';
 
 describe('Integration Tests', () => {
   describe('Image Proxy Flow', () => {
@@ -33,7 +34,7 @@ describe('Integration Tests', () => {
         'image/png', 
         'image/gif',
         'image/webp',
-        'image/svg+xml'
+        'image/svg+xml',
       ];
       
       imageTypes.forEach(type => {
@@ -47,7 +48,7 @@ describe('Integration Tests', () => {
       const errors = [
         { code: 'ECONNABORTED', expected: 504 },
         { response: { status: 404, statusText: 'Not Found' }, expected: 404 },
-        { message: 'Network Error', expected: 500 }
+        { message: 'Network Error', expected: 500 },
       ];
 
       errors.forEach(error => {
@@ -69,7 +70,7 @@ describe('Integration Tests', () => {
         { ip: '172.20.0.5', isInternal: true },
         { ip: '192.168.1.1', isInternal: false },
         { ip: '203.0.113.1', isInternal: false },
-        { ip: '10.0.0.1', isInternal: false }
+        { ip: '10.0.0.1', isInternal: false },
       ];
 
       testIPs.forEach(({ ip, isInternal }) => {
@@ -81,7 +82,7 @@ describe('Integration Tests', () => {
   describe('Request Headers', () => {
     it('should generate proper upstream headers', () => {
       const targetUrl = 'https://example.com/image.jpg';
-      const parsedUrl = new URL(targetUrl);
+      const parsedUrl = new globalThis.URL(targetUrl);
       const clientIP = '203.0.113.1';
       
       const headers = {
@@ -109,7 +110,7 @@ describe('Integration Tests', () => {
       const upstreamHeaders = {
         'content-type': 'image/jpeg',
         'cache-control': 'max-age=3600',
-        'etag': '"abc123"'
+        'etag': '"abc123"',
       };
 
       const responseHeaders = {};

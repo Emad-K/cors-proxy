@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { describe, it, expect } from 'vitest';
 
 describe('CORS Proxy API', () => {
   describe('Health endpoint', () => {
@@ -11,7 +12,7 @@ describe('CORS Proxy API', () => {
         return c.json({ redis: 'connected' });
       });
 
-      const req = new Request('http://localhost/health');
+      const req = new globalThis.Request('http://localhost/health');
       const res = await app.fetch(req);
       const data = await res.json();
 
@@ -34,7 +35,7 @@ describe('CORS Proxy API', () => {
         return c.json({ success: true });
       });
 
-      const req = new Request('http://localhost/');
+      const req = new globalThis.Request('http://localhost/');
       const res = await app.fetch(req);
       const data = await res.json();
 
@@ -53,7 +54,7 @@ describe('CORS Proxy API', () => {
         }
 
         try {
-          new URL(targetUrl);
+          new globalThis.URL(targetUrl);
         } catch {
           return c.json({ error: 'Invalid URL provided' }, 400);
         }
@@ -61,7 +62,7 @@ describe('CORS Proxy API', () => {
         return c.json({ success: true });
       });
 
-      const req = new Request('http://localhost/invalid-url');
+      const req = new globalThis.Request('http://localhost/invalid-url');
       const res = await app.fetch(req);
       const data = await res.json();
 
@@ -80,7 +81,7 @@ describe('CORS Proxy API', () => {
         }
 
         try {
-          new URL(targetUrl);
+          new globalThis.URL(targetUrl);
         } catch {
           return c.json({ error: 'Invalid URL provided' }, 400);
         }
@@ -88,14 +89,14 @@ describe('CORS Proxy API', () => {
         return c.json({ success: true, url: targetUrl });
       });
 
-      const req = new Request('http://localhost/https://example.com/image.jpg');
+      const req = new globalThis.Request('http://localhost/https://example.com/image.jpg');
       const res = await app.fetch(req);
       const data = await res.json();
 
       expect(res.status).toBe(200);
       expect(data).toEqual({ 
         success: true, 
-        url: 'https://example.com/image.jpg' 
+        url: 'https://example.com/image.jpg',
       });
     });
   });
@@ -112,7 +113,7 @@ describe('CORS Proxy API', () => {
       
       app.get('/test', (c) => c.json({ test: true }));
 
-      const req = new Request('http://localhost/test', {
+      const req = new globalThis.Request('http://localhost/test', {
         method: 'OPTIONS',
         headers: {
           'Origin': 'https://example.com',
