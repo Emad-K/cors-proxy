@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import { describe, it, expect } from 'vitest';
 
 describe('End-to-End Tests', () => {
@@ -12,7 +14,7 @@ describe('End-to-End Tests', () => {
         'TIMEOUT',
         'RATE_LIMIT_WINDOW',
         'RATE_LIMIT_MAX',
-        'USER_AGENT'
+        'USER_AGENT',
       ];
 
       requiredEnvVars.forEach(envVar => {
@@ -38,24 +40,24 @@ describe('End-to-End Tests', () => {
       const validUrls = [
         'https://example.com/image.jpg',
         'http://test.com/photo.png',
-        'https://cdn.example.org/assets/logo.svg'
+        'https://cdn.example.org/assets/logo.svg',
       ];
 
       const invalidUrls = [
         'not-a-url',
         'invalid-url-format',
-        ''
+        '',
       ];
 
       validUrls.forEach(url => {
-        expect(() => new URL(url)).not.toThrow();
+        expect(() => new globalThis.URL(url)).not.toThrow();
       });
 
       invalidUrls.forEach(url => {
         if (url === '') {
           expect(url).toBe('');
         } else {
-          expect(() => new URL(url)).toThrow();
+          expect(() => new globalThis.URL(url)).toThrow();
         }
       });
     });
@@ -69,14 +71,14 @@ describe('End-to-End Tests', () => {
         'image/gif',
         'image/webp',
         'image/svg+xml',
-        'image/avif'
+        'image/avif',
       ];
 
       const nonImageTypes = [
         'text/html',
         'application/json',
         'text/plain',
-        'application/octet-stream'
+        'application/octet-stream',
       ];
 
       imageTypes.forEach(type => {
