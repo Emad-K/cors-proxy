@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    ".env",
+    ".env.example"
+  ],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "words": [
+    "apng",
+    "Buildx",
+    "evalsha",
+    "healthcheck",
+    "nginxproxymanager_default"
+  ],
+  "ignoreWords": [],
+  "import": []
+}
