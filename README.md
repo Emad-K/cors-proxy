@@ -1,122 +1,150 @@
-# CORS Proxy
+<div align="center">
+  <a href="https://github.com/Emad-K/cors-proxy">
+    <img src="https://raw.githubusercontent.com/Emad-K/cors-proxy/main/.github/assets/logo.svg" alt="CORS Proxy" width="150" height="150">
+  </a>
+  <h1 align="center">CORS Proxy</h1>
+</div>
 
-[![Test, Build and Deploy](https://github.com/Emad-K/cors-proxy/actions/workflows/docker-build.yml/badge.svg)](https://github.com/Emad-K/cors-proxy/actions/workflows/docker-build.yml)
-[![CI](https://github.com/Emad-K/cors-proxy/actions/workflows/ci.yml/badge.svg)](https://github.com/Emad-K/cors-proxy/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<div align="center">
+  <a href="https://github.com/Emad-K/cors-proxy/actions/workflows/ci.yml">
+    <img src="https://github.com/Emad-K/cors-proxy/actions/workflows/ci.yml/badge.svg" alt="CI">
+  </a>
+  <a href="https://github.com/Emad-K/cors-proxy/actions/workflows/docker-build.yml">
+    <img src="https://github.com/Emad-K/cors-proxy/actions/workflows/docker-build.yml/badge.svg" alt="Test, Build and Deploy">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+  </a>
+</div>
 
 A high-performance CORS proxy server built with Hono.js that enables cross-origin requests to any URL with intelligent caching, rate limiting, and comprehensive logging.
 
 ## ✨ Features
 
-- 🚀 **High Performance** - Built with Hono.js for maximum speed
-- 🔒 **Rate Limiting** - Redis-backed rate limiting with IP-based controls
-- 💾 **Intelligent Caching** - Redis caching for improved response times
-- 🌐 **CORS Enabled** - Handles cross-origin requests seamlessly
-- 📊 **Comprehensive Logging** - Structured logging with Pino
-- 🐳 **Docker Ready** - Containerized for easy deployment
-- ✅ **Well Tested** - 33+ tests with comprehensive coverage
-- 🔧 **Environment Configurable** - Flexible configuration via environment variables
+| 🚀 Performance | 🔒 Security | 💻 Developer Experience |
+| :--- | :--- | :--- |
+| **High-Performance Core** | **IP-Based Rate Limiting** | **Seamless CORS Handling** |
+| Built with [Hono.js](https://hono.dev/), one of the fastest web frameworks for Node.js. | Prevents abuse with Redis-backed rate limiting. | Automatically handles CORS headers for any proxied request. |
+| **Intelligent Caching** | **URL Validation** | **Comprehensive Logging** |
+| Redis caching for proxied responses reduces latency. | Ensures that only valid URLs are processed. | Structured logging with [Pino](https://getpino.io/) for easy monitoring. |
+| **Low Memory Footprint** | **Error Handling** | **Docker Ready** |
+| Optimized for minimal memory usage. | Graceful error handling prevents information leakage. | Containerized with Docker for easy deployment. |
+| **High Throughput** | **Non-Root Docker User** | **Well-Tested** |
+| Handles thousands of requests per second. | Runs as a non-root user in the Docker container. | 33+ tests with comprehensive coverage. |
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### Using Docker (Recommended)
+There are three ways to get started with the CORS Proxy.
+
+### 1. Docker (Recommended)
+
+The easiest way to get started is by using the pre-built Docker image.
 
 ```bash
-# Pull and run the latest image
 docker run -d \
   --name cors-proxy \
   -p 3000:3000 \
   -e REDIS_URL=redis://your-redis:6379 \
   -e NODE_ENV=production \
-  -e LOG_LEVEL=info \
-  -e CACHE_DURATION=300 \
-  -e TIMEOUT=5000 \
-  -e RATE_LIMIT_WINDOW=60 \
-  -e RATE_LIMIT_MAX=100 \
-  -e USER_AGENT="CORS-Proxy/1.0" \
   ghcr.io/emad-k/cors-proxy:latest
 ```
 
-### Using Docker Compose
+### 2. Docker Compose
+
+For a more integrated setup, you can use Docker Compose.
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/Emad-K/cors-proxy.git
 cd cors-proxy
 
-# Start with Docker Compose
+# 2. Start the services
 docker-compose up -d
 ```
 
-### Local Development
+### 3. Local Development
+
+To run the proxy locally for development, you'll need to have Node.js, pnpm, and Redis installed.
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/Emad-K/cors-proxy.git
 cd cors-proxy
 
-# Install dependencies
+# 2. Install dependencies
 pnpm install
 
-# Copy environment file
+# 3. Set up environment variables
 cp .env.example .env
 
-# Edit .env with your configuration
-# Start Redis (required)
+# 4. Start Redis (if not already running)
 docker run -d --name redis -p 6379:6379 redis:alpine
 
-# Start the server
+# 5. Start the server
 pnpm start
 ```
 
 ## 📖 Usage
 
-### Basic Proxy Request
+Once the proxy is running, you can use it to make requests to any URL.
+
+### Command-Line Interface (CLI)
+
+You can use `curl` to test the proxy from the command line.
 
 ```bash
-# Proxy any URL by appending it to your server
+# Proxy a JSON API
 curl "http://localhost:3000/https://api.example.com/data"
 
-# Proxy images
-curl "http://localhost:3000/https://example.com/image.jpg"
+# Proxy an image
+curl "http://localhost:3000/https://example.com/image.jpg" > image.jpg
 ```
 
-### JavaScript/Frontend Usage
+### Frontend JavaScript
+
+To use the proxy in your frontend code, simply prepend the proxy URL to the target URL.
 
 ```javascript
-// Instead of direct request (blocked by CORS)
-// fetch('https://api.example.com/data') // ❌ CORS Error
+// Before (CORS error)
+// fetch('https://api.example.com/data');
 
-// Use the proxy
+// After (works!)
 fetch('http://localhost:3000/https://api.example.com/data')
   .then(response => response.json())
-  .then(data => console.log(data)); // ✅ Works!
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
 ```
 
 ### Health Check
 
+To verify that the proxy is running and connected to Redis, you can use the health check endpoint.
+
 ```bash
 curl http://localhost:3000/health
-# Response: {"redis":"connected"}
+# Expected response: {"redis":"connected"}
 ```
 
 ## ⚙️ Configuration
 
-### Environment Variables
+The proxy is configured using environment variables. You can set these variables in a `.env` file or directly in your deployment environment.
 
 | Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `NODE_ENV` | Environment (development/production) | - | ✅ |
-| `LOG_LEVEL` | Logging level (debug/info/warn/error) | - | ✅ |
-| `PORT` | Server port | - | ✅ |
-| `REDIS_URL` | Redis connection URL | - | ✅ |
-| `CACHE_DURATION` | Cache TTL in seconds | - | ✅ |
-| `TIMEOUT` | Request timeout in milliseconds | - | ✅ |
-| `RATE_LIMIT_WINDOW` | Rate limit window in seconds | - | ✅ |
-| `RATE_LIMIT_MAX` | Max requests per window | - | ✅ |
-| `USER_AGENT` | User agent for upstream requests | - | ✅ |
+| :--- | :--- | :--- | :--- |
+| `NODE_ENV` | The environment the proxy is running in. | `production` | ✅ |
+| `LOG_LEVEL` | The logging level. | `info` | ✅ |
+| `PORT` | The port the proxy will listen on. | `3000` | ✅ |
+| `REDIS_URL` | The URL for the Redis instance. | `redis://localhost:6379` | ✅ |
+| `CACHE_DURATION` | The cache duration in seconds. | `300` | ✅ |
+| `TIMEOUT` | The request timeout in milliseconds. | `5000` | ✅ |
+| `RATE_LIMIT_WINDOW` | The rate limit window in seconds. | `60` | ✅ |
+| `RATE_LIMIT_MAX` | The maximum number of requests per window. | `100` | ✅ |
+| `USER_AGENT` | The user agent to use for requests. | `CORS-Proxy/1.0` | ✅ |
 
-### Example Configuration
+### Example `.env` File
 
 ```bash
 NODE_ENV=production
@@ -127,7 +155,7 @@ CACHE_DURATION=300
 TIMEOUT=5000
 RATE_LIMIT_WINDOW=60
 RATE_LIMIT_MAX=100
-USER_AGENT=CORS-Proxy/1.0
+USER_AGENT="CORS-Proxy/1.0"
 ```
 
 ## 🏗️ Architecture
@@ -176,25 +204,49 @@ pnpm run test:coverage
 
 ## 🚀 Deployment
 
-### GitHub Container Registry
+The proxy is designed for easy deployment using Docker.
 
-Images are automatically built and pushed to GitHub Container Registry:
+### Container Registry
+
+The Docker images are automatically built and pushed to the GitHub Container Registry.
 
 ```bash
-# Latest stable
+# Pull the latest image
 docker pull ghcr.io/emad-k/cors-proxy:latest
 
-# Specific commit
-docker pull ghcr.io/emad-k/cors-proxy:main-abc1234
+# Pull a specific version
+docker pull ghcr.io/emad-k/cors-proxy:1.0.0
 ```
 
 ### Production Deployment
 
-1. **Environment Setup** - Configure all required environment variables
-2. **Redis Instance** - Ensure Redis is available and accessible
-3. **Health Checks** - Monitor `/health` endpoint
-4. **Scaling** - Run multiple instances behind a load balancer
-5. **Monitoring** - Set up log aggregation and metrics
+For production deployments, you should consider the following:
+
+- **Environment Variables**: Make sure to set all the required environment variables.
+- **Redis**: For production, you should use a managed Redis service.
+- **Health Checks**: The `/health` endpoint can be used to check the status of the proxy.
+- **Scaling**: The proxy is stateless, so you can run multiple instances behind a load balancer.
+- **Monitoring**: The proxy uses structured logging, so you can use a log management service to monitor the proxy.
+
+## 📖 API Reference
+
+### `GET /*`
+
+This endpoint is used to proxy requests to the target URL.
+
+- **URL**: `/*`
+- **Method**: `GET`
+- **Description**: Proxies a request to the specified URL.
+- **Example**: `http://localhost:3000/https://api.example.com/data`
+
+### `GET /health`
+
+This endpoint is used to check the health of the proxy.
+
+- **URL**: `/health`
+- **Method**: `GET`
+- **Description**: Checks the connection to Redis.
+- **Example**: `http://localhost:3000/health`
 
 ## 🔧 Development
 
@@ -252,18 +304,15 @@ pnpm test
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests (`pnpm test`)
-5. Run linting (`pnpm run lint`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+Contributions are welcome! Please see the [Contributing Guide](CONTRIBUTING.md) for more information.
+
+## 💖 Code of Conduct
+
+This project has a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors are expected to follow.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## 🙏 Acknowledgments
 
